@@ -4,6 +4,7 @@ import 'package:chatapp/service/auth_service.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ProfilePage extends StatefulWidget {
   String userName;
   String email;
@@ -88,8 +89,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                   color: Colors.red,
                                 )),
                             IconButton(
-                                onPressed: () async {
-                                  await authService.signOut();
+                                onPressed: () {
+                                  //burda async and await var idi
+                                  authService.signOut();
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                           builder: (context) =>
