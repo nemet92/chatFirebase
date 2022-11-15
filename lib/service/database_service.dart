@@ -35,7 +35,7 @@ class DatabaseService {
 
   //creating a group
   Future createGruop(String userName, String id, String groupName) async {
-    DocumentReference documentReference = await groupCollection.add({
+    DocumentReference groupDocumentReference = await groupCollection.add({
       "groupName": groupName,
       "groupIcon": "",
       "admin": "${id}_$userName",
@@ -44,5 +44,36 @@ class DatabaseService {
       "recentMessage": "",
       "recentMessageSender": "",
     });
+
+    await groupDocumentReference.update({
+      "members": FieldValue.arrayUnion(["${uid}_$userName"]),
+      "groupId": groupDocumentReference.id,
+    });
+
+    DocumentReference userDocumentReference = userCollection.doc(uid);
+    return await userDocumentReference.update({
+      "groups":
+          FieldValue.arrayUnion(["${groupDocumentReference.id}_$groupName"])
+    });
+  }
+
+  // getting the chats
+  getChats(String groupId) async {
+    return groupCollection
+        .doc(groupId)
+        .collection("messages")
+        .orderBy("time")
+        .snapshots();
+  }
+
+  Future getGroupAdmin(String groupId) async {
+    DocumentReference d = groupCollection.doc(groupId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot["admin"];
+  }
+
+//get group members
+  getGroupMembers(groupId) async {
+    return groupCollection.doc(groupId).snapshots();
   }
 }

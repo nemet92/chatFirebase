@@ -1,8 +1,11 @@
+import 'package:chatapp/const/appPath.dart';
 import 'package:chatapp/helper/helper_function.dart';
 import 'package:chatapp/pages/home_page.dart';
 import 'package:chatapp/pages/auth/register_page.dart';
 import 'package:chatapp/service/auth_service.dart';
 import 'package:chatapp/service/database_service.dart';
+import 'package:chatapp/const/appText.dart';
+import 'package:chatapp/widgets/customText.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,24 +43,24 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          "Groupie",
-                          style: TextStyle(
-                              fontSize: 40, fontWeight: FontWeight.bold),
+                        CustomTextWidget(
+                          text: AppText.loginPageText,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        const Text(
-                          "Login now to see what they are talking!",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                        CustomTextWidget(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          text: AppText.loginNow,
                         ),
-                        Image.asset("assets/login.png"),
+                        Image.asset(AppPath.loginPageImage),
                         TextFormField(
                           validator: (val) {
                             if (val!.isEmpty) {
-                              return "Please fill in the box!";
+                              return AppText.validatorEmail;
                             } else {
                               return null;
                             }
@@ -66,11 +69,8 @@ class _LoginPageState extends State<LoginPage> {
                             email = val;
                           },
                           decoration: textInpuDecoration.copyWith(
-                              labelText: "Email",
-                              prefixIcon: Icon(
-                                Icons.email,
-                                color: Theme.of(context).primaryColor,
-                              )),
+                              labelText: AppText.labelTextEmail,
+                              prefixIcon: CustomIcon(icon: AppPath.emailIcon)),
                         ),
                         const SizedBox(
                           height: 5,
@@ -78,14 +78,13 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           obscureText: true,
                           decoration: textInpuDecoration.copyWith(
-                              labelText: "Password",
-                              prefixIcon: Icon(
-                                Icons.lock,
-                                color: Theme.of(context).primaryColor,
+                              labelText: AppText.labelTextPassword,
+                              prefixIcon: CustomIcon(
+                                icon: AppPath.passwordIcon,
                               )),
                           validator: (val) {
                             if (val!.length < 6) {
-                              return "Please must be at least 6 charecters";
+                              return AppText.validatorPassword;
                             } else {
                               return null;
                             }
@@ -171,5 +170,17 @@ class _LoginPageState extends State<LoginPage> {
         }
       });
     }
+  }
+}
+
+class CustomIcon extends StatelessWidget {
+  CustomIcon({Key? key, required this.icon}) : super(key: key);
+  IconData icon;
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      icon,
+      color: Theme.of(context).primaryColor,
+    );
   }
 }

@@ -4,6 +4,7 @@ import 'package:chatapp/pages/profile_page.dart';
 import 'package:chatapp/pages/search_page.dart';
 import 'package:chatapp/service/auth_service.dart';
 import 'package:chatapp/service/database_service.dart';
+import 'package:chatapp/widgets/grooup_title.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +21,21 @@ class _HomeScreenState extends State<HomeScreen> {
   String email = "";
   Stream? groups;
   String groupName = "";
-  final bool _isLoading = false;
+  late bool _isLoading = false;
   AuthService authService = AuthService();
   @override
   void initState() {
     super.initState();
     gettingUserData();
+  }
+
+  //String manipulaction
+  String getId(String res) {
+    return res.substring(0, res.indexOf("_"));
+  }
+
+  String getName(String res) {
+    return res.substring(res.indexOf("_") + 1);
   }
 
   gettingUserData() async {
@@ -111,31 +121,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 showDialog(
                     context: context,
                     builder: (context) {
-                      return AlertDialog(
-                        title: const Text("Logout"),
-                        content: const Text("Are you sure want to logout?"),
-                        actions: [
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.cancel,
-                                color: Colors.red,
-                              )),
-                          IconButton(
-                              onPressed: () async {
-                                await authService.signOut();
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginPage()),
-                                    (route) => false);
-                              },
-                              icon: const Icon(
-                                Icons.done,
-                                color: Colors.green,
-                              ))
-                        ],
-                      );
+                      return StatefulBuilder(builder: (context, setState) {
+                        return AlertDialog(
+                          title: const Text("Logout"),
+                          content: const Text("Are you sure want to logout?"),
+                          actions: [
+                            IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                )),
+                            IconButton(
+                                onPressed: () async {
+                                  await authService.signOut();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginPage()),
+                                      (route) => false);
+                                },
+                                icon: const Icon(
+                                  Icons.done,
+                                  color: Colors.green,
+                                ))
+                          ],
+                        );
+                      });
                     });
               },
               selectedColor: Theme.of(context).primaryColor,
@@ -229,7 +241,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor),
-                onPressed: () {},
+                onPressed: () async {
+                  if (groupName != "") {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                        .createGruop(userName,
+                            FirebaseAuth.instance.currentUser!.uid, groupName)
+                        .whenComplete(() {
+                      _isLoading = false;
+                    });
+                    Navigator.of(context).pop();
+                    showSnacbar(
+                        context, Colors.green, "Group created successfully.");
+                  }
+                },
                 child: const Text("CREATE"),
               )
             ],
@@ -244,7 +271,18 @@ class _HomeScreenState extends State<HomeScreen> {
         if (snapshot.hasData) {
           if (snapshot.data["groups"] != null) {
             if (snapshot.data["groups"].length != 0) {
-              return const Text("helllo");
+              return ListView.builder(
+                  itemCount: snapshot.data["groups"].length,
+                  itemBuilder: (context, index) {
+                    int reverseIndex =
+                        snapshot.data["groups"].length - index - 1;
+
+                    return GroupTile(
+                      groupId: getId(snapshot.data["groups"][reverseIndex]),
+                      groupName: getName(snapshot.data['groups'][reverseIndex]),
+                      userName: snapshot.data["fullName"],
+                    );
+                  });
             } else {
               return noGroupWidget();
             }
