@@ -52,6 +52,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xffee7b64),
+              elevation: 0,
+              centerTitle: true,
+              titleTextStyle:
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
           primaryColor: Constants().primaryColor,
           scaffoldBackgroundColor: Colors.white),
       debugShowCheckedModeBanner: false,
