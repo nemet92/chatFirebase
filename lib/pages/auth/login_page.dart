@@ -5,7 +5,7 @@ import 'package:chatapp/pages/auth/register_page.dart';
 import 'package:chatapp/service/auth_service.dart';
 import 'package:chatapp/service/database_service.dart';
 import 'package:chatapp/const/appText.dart';
-import 'package:chatapp/widgets/customText.dart';
+import 'package:chatapp/widgets/custom_text.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

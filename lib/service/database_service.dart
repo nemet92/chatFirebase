@@ -5,9 +5,9 @@ class DatabaseService {
   DatabaseService({this.uid});
 
   //reference for our colllections
-  final CollectionReference userCollection =
+  CollectionReference userCollection =
       FirebaseFirestore.instance.collection("users");
-  final CollectionReference groupCollection =
+  CollectionReference groupCollection =
       FirebaseFirestore.instance.collection("group");
 
   //saving the userdate
@@ -95,4 +95,14 @@ class DatabaseService {
       return false;
     }
   }
+}
+
+//toggling the group join/exit
+Future tooggleGroupJoin(
+    String groupId, String userName, String groupName) async {
+  //doc reference
+  DocumentReference userDocumentReference = userCollection.doc(uid);
+  DocumentReference groupDocumentReference = groupCollection.doc(groupId);
+  DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+  List<dynamic> groups = await documentSnapshot["groups"];
 }

@@ -159,7 +159,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
       subtitle: Text("Admin:${getName(admin)}"),
       trailing: InkWell(
-        onTap: () {},
+        onTap: () async {},
         child: isJoined
             ? Container(
                 decoration: BoxDecoration(

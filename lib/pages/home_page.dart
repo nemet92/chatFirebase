@@ -4,7 +4,7 @@ import 'package:chatapp/pages/profile_page.dart';
 import 'package:chatapp/pages/search_page.dart';
 import 'package:chatapp/service/auth_service.dart';
 import 'package:chatapp/service/database_service.dart';
-import 'package:chatapp/widgets/grooup_title.dart';
+import 'package:chatapp/widgets/group_title.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
