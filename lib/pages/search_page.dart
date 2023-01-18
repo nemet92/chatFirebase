@@ -1,5 +1,7 @@
 import 'package:chatapp/helper/helper_function.dart';
+import 'package:chatapp/pages/chat_page.dart';
 import 'package:chatapp/service/database_service.dart';
+import 'package:chatapp/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -159,7 +161,29 @@ class _SearchPageState extends State<SearchPage> {
       ),
       subtitle: Text("Admin:${getName(admin)}"),
       trailing: InkWell(
-        onTap: () async {},
+        onTap: () async {
+          DatabaseService(uid: user!.uid)
+              .tooggleGroupJoin(groupId, userName, groupName);
+          if (isJoined) {
+            setState(() {
+              isJoined = !isJoined;
+            });
+            showSnacbar(context, Colors.green, "Successfully joined he group");
+            Future.delayed(const Duration(seconds: 2), (() {
+              nextScreen(
+                  context,
+                  ChatPage(
+                      groupId: groupId,
+                      groupName: groupName,
+                      userName: userName));
+            }));
+          } else {
+            setState(() {
+              isJoined = !isJoined;
+              showSnacbar(context, Colors.red, "Left the group $groupName");
+            });
+          }
+        },
         child: isJoined
             ? Container(
                 decoration: BoxDecoration(
