@@ -119,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               onTap: () async {
                 showDialog(
+                    barrierDismissible: false,
                     context: context,
                     builder: (context) {
                       return StatefulBuilder(builder: (context, setState) {
@@ -133,8 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.red,
                                 )),
                             IconButton(
-                                onPressed: () async {
-                                  await authService.signOut();
+                                onPressed: () {
+                                  authService.signOut();
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                           builder: (context) =>
